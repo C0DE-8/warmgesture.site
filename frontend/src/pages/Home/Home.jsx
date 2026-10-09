@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ProductCard from '../../components/ProductCard.jsx'
+import BudgetFinder from '../../components/BudgetFinder.jsx'
 import Icon from '../../components/Icon.jsx'
 import { imageUrl } from '../../data/products.js'
 import './Home.css'
@@ -34,6 +35,8 @@ export default function Home({ products, onShop, onAdd }) {
     </section>
 
     <section className="featured-section"><div className="content-width"><div className="section-heading"><div><span className="eyebrow">THE CURRENT CRUSHES</span><h2>Good things, <em>coming your way.</em></h2></div><button className="text-link" onClick={() => onShop()}>See all gifts <span><Icon name="arrowRight" size={14}/></span></button></div><div className="product-grid">{products.slice(0, 4).map((product) => <ProductCard key={product.id} product={product} onAdd={onAdd}/>)}</div><div className="featured-extra"><span><Icon name="sparkle" size={20}/></span><div><strong>Something for every kind of moment</strong><small>From tiny thank-yous to big celebrations</small></div><button className="text-link" onClick={() => onShop()}>Explore all {products.length} gifts <span><Icon name="arrowRight" size={14}/></span></button></div></div></section>
+
+    <BudgetFinder products={products} onAdd={onAdd}/>
 
     <section className="note-banner"><div className="note-banner-image"><img src={imageUrl('photo-1511988617509-a57c8a288659', 1000)} alt="Friends sharing a joyful moment" onError={showFallback}/></div><div className="note-banner-copy"><span className="eyebrow">THE BEST KIND OF DELIVERY</span><span className="big-heart"><Icon name="heart" size={50}/></span><h2>Because “thinking of you”<br/>deserves <em>a little something.</em></h2><p>We believe the smallest gestures can make the biggest days. Find a thoughtful surprise for every kind of moment.</p><button className="button-dark" onClick={() => onShop()}>Send a little love <span><Icon name="arrowRight" size={14}/></span></button><span className="banner-doodle">with love, always</span></div></section>
 

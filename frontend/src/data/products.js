@@ -15,6 +15,14 @@ export const products = [
   { id: 14, name: 'The Forever Tulips', category: 'Flowers', price: 49, image: 'photo-1520763185298-1b434c919102', tag: 'Brighten their day', note: 'A colorful hello for no reason.' },
   { id: 15, name: 'Pocket-Sized Hugs', category: 'Keepsakes', price: 24, image: 'photo-1559454403-b8fb88521f11', tag: 'Tiny but mighty', note: 'A little keepsake to keep close.' },
   { id: 16, name: 'The Celebration Box', category: 'Gift boxes', price: 68, image: 'photo-1549465220-1a8b9238cd48', tag: 'Party of one (or two)', note: 'A whole celebration, wrapped up.' },
+  { id: 17, name: 'Little Love Chocolates', category: 'Sweet treats', price: 10, image: 'photo-1575377427642-087cf684f29d', tag: 'A tiny treat', note: 'A few lovely bites for their day.' },
+  { id: 18, name: 'Pocketful of Sweetness', category: 'Sweet treats', price: 12, image: 'photo-1488477181946-6428a0291777', tag: 'Under $15', note: 'A petite dessert made for sharing.' },
+  { id: 19, name: 'Mini Movie Snack Mix', category: 'Snack boxes', price: 15, image: 'photo-1541592106381-b31e9677c0e5', tag: 'Movie night', note: 'A cozy little mix of sweet and salty.' },
+  { id: 20, name: 'Small but Mighty Hug', category: 'Keepsakes', price: 18, image: 'photo-1559454403-b8fb88521f11', tag: 'A pocket-sized hug', note: 'A soft little friend to keep close.' },
+  { id: 21, name: 'Just Because Posy', category: 'Flowers', price: 20, image: 'photo-1520763185298-1b434c919102', tag: 'Under $20', note: 'A cheerful small bunch for any day.' },
+  { id: 22, name: 'Chocolate Love Bites', category: 'Sweet treats', price: 15, image: 'photo-1549007994-cb92caebd54b', tag: 'Sweet little extra', note: 'A handful of rich chocolate treats.' },
+  { id: 23, name: 'Sunny Day Snack Pouch', category: 'Snack boxes', price: 10, image: 'photo-1541592106381-b31e9677c0e5', tag: 'A little pick-me-up', note: 'A bright snack break, ready to send.' },
+  { id: 24, name: 'Tiny Thank-You Treats', category: 'Sweet treats', price: 20, image: 'photo-1606313564200-e75d5e30476c', tag: 'Say thanks sweetly', note: 'A thoughtful sweet for someone lovely.' },
 ]
 
 export const imageUrl = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`

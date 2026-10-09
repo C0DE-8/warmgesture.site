@@ -75,9 +75,27 @@ function App() {
     const code = `WG-${Date.now().toString(36).slice(-6).toUpperCase()}`
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
     const shipping = subtotal === 0 || subtotal >= 75 ? 0 : 6.95
-    const order = { code, customer, items: cart, subtotal, shipping, total: subtotal + shipping, deliveryMode, paymentMethod, createdAt: new Date().toISOString() }
+    const total = subtotal + shipping
+    const paymentName = paymentMethod === 'crypto' ? 'Cryptocurrency' : 'Gift card'
+    const order = { code, customer, items: cart, subtotal, shipping, total, deliveryMode, paymentMethod, createdAt: new Date().toISOString() }
+    const messageLines = [
+      'Hello WarmGesture! I would like to complete this gift order:',
+      `Order: ${code}`,
+      ...cart.map((item) => `• ${item.name} × ${item.quantity} — $${(item.price * item.quantity).toFixed(2)}`),
+      `Subtotal: $${subtotal.toFixed(2)}`,
+      `Delivery: ${shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}`,
+      `Total: $${total.toFixed(2)}`,
+      `Delivery mode: ${deliveryMode === 'surprise' ? 'Surprise gift (please coordinate address with recipient by phone)' : 'Standard delivery'}`,
+      `Recipient: ${customer.recipientName} · ${customer.recipientPhone}`,
+      ...(deliveryMode === 'standard' ? [`Address: ${customer.address}, ${customer.city}, ${customer.postal}`] : []),
+      `Sender: ${customer.anonymous ? 'Please keep me anonymous' : customer.senderName || 'Not provided'}`,
+      `Payment preference: ${paymentName}`,
+      ...(customer.note ? [`Gift note: “${customer.note}”`] : []),
+    ]
+    order.whatsappUrl = `https://wa.me/15869146265?text=${encodeURIComponent(messageLines.join('\n'))}`
     const pastOrders = readLocal('warmgesture-orders', [])
     localStorage.setItem('warmgesture-orders', JSON.stringify([order, ...pastOrders]))
+    window.open(order.whatsappUrl, '_blank', 'noopener,noreferrer')
     setOrderReceipt(order)
     setCart([])
   }
