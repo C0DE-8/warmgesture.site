@@ -5,7 +5,7 @@ import './Home.css'
 
 const categories = [
   { name: 'Flowers', sub: 'Say it with petals', image: 'photo-1494972308805-463bc619d34e', className: 'cat-flowers' },
-  { name: 'Sweet treats', sub: 'A little sugar, a lot of love', image: 'photo-1548907040-4d42d979d68e', className: 'cat-sweets' },
+  { name: 'Sweet treats', sub: 'A little sugar, a lot of love', image: 'photo-1575377427642-087cf684f29d', className: 'cat-sweets' },
   { name: 'Gift boxes', sub: 'All the good things together', image: 'photo-1549465220-1a8b9238cd48', className: 'cat-boxes' },
 ]
 
