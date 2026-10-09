@@ -95,7 +95,6 @@ function App() {
     order.whatsappUrl = `https://wa.me/15869146265?text=${encodeURIComponent(messageLines.join('\n'))}`
     const pastOrders = readLocal('warmgesture-orders', [])
     localStorage.setItem('warmgesture-orders', JSON.stringify([order, ...pastOrders]))
-    window.open(order.whatsappUrl, '_blank', 'noopener,noreferrer')
     setOrderReceipt(order)
     setCart([])
   }
