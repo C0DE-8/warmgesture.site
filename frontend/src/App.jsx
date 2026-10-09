@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Home from './pages/Home/Home.jsx'
 import Shop from './pages/Shop/Shop.jsx'
 import Checkout from './pages/Checkout/Checkout.jsx'
+import Icon from './components/Icon.jsx'
 import { products } from './data/products.js'
 import { imageUrl } from './data/products.js'
 import './App.css'
@@ -14,8 +15,8 @@ function App() {
   const [page, setPage] = useState('home')
   const [category, setCategory] = useState('All gifts')
   const [cart, setCart] = useState(() => readLocal('warmgesture-cart', []))
-  const [customer, setCustomer] = useState(() => readLocal('warmgesture-customer', { name: '', email: '', address: '', city: '', postal: '', note: '' }))
-  const [orderCode, setOrderCode] = useState('')
+  const [customer, setCustomer] = useState(() => ({ senderName: '', email: '', recipientName: '', recipientPhone: '', address: '', city: '', postal: '', note: '', anonymous: false, ...readLocal('warmgesture-customer', {}) }))
+  const [orderReceipt, setOrderReceipt] = useState(null)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
   const toastSequence = useRef(0)
@@ -46,23 +47,25 @@ function App() {
     if (item) notify(`${item.name} removed from your bag`, 'removed')
   }
   const updateCustomer = (field, value) => setCustomer((info) => ({ ...info, [field]: value }))
-  const placeOrder = () => {
+  const placeOrder = ({ deliveryMode, paymentMethod }) => {
     const code = `WG-${Date.now().toString(36).slice(-6).toUpperCase()}`
-    const order = { code, customer, items: cart, total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0), createdAt: new Date().toISOString() }
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const shipping = subtotal === 0 || subtotal >= 75 ? 0 : 6.95
+    const order = { code, customer, items: cart, subtotal, shipping, total: subtotal + shipping, deliveryMode, paymentMethod, createdAt: new Date().toISOString() }
     const pastOrders = readLocal('warmgesture-orders', [])
     localStorage.setItem('warmgesture-orders', JSON.stringify([order, ...pastOrders]))
-    setOrderCode(code)
+    setOrderReceipt(order)
     setCart([])
   }
   const shop = (nextCategory = 'All gifts') => { setCategory(nextCategory); setPage('shop'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const openCheckout = () => { setOrderCode(''); setPage('checkout'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const openCheckout = () => { setOrderReceipt(null); setPage('checkout'); window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
   return (
     <div className="app-shell">
       <header className="site-header">
         <div className="header-inner">
             <button className="brand" onClick={() => setPage('home')} aria-label="WarmGesture home">
-            <span className="brand-mark">w<span>♥</span></span><span className="brand-name">warmgesture<span className="brand-dot">.</span></span>
+            <span className="brand-mark">w<span><Icon name="heart" size={9}/></span></span><span className="brand-name">warmgesture<span className="brand-dot">.</span></span>
           </button>
           <nav className="main-nav" aria-label="Main navigation">
             <button className={page === 'home' ? 'nav-active' : ''} onClick={() => setPage('home')}>Home</button>
@@ -77,13 +80,13 @@ function App() {
           </div>
         </div>
       </header>
-      <main>{page === 'home' ? <Home products={products} onShop={shop} onAdd={addToCart} /> : page === 'shop' ? <Shop key={category} products={products} category={category} onCategory={setCategory} onAdd={addToCart} /> : <Checkout cart={cart} customer={customer} onCustomer={updateCustomer} onQuantity={changeQuantity} onRemove={removeFromCart} onBack={() => { setOrderCode(''); shop() }} onPlaceOrder={placeOrder} orderCode={orderCode} />}</main>
+      <main>{page === 'home' ? <Home products={products} onShop={shop} onAdd={addToCart} /> : page === 'shop' ? <Shop key={category} products={products} category={category} onCategory={setCategory} onAdd={addToCart} /> : <Checkout cart={cart} customer={customer} onCustomer={updateCustomer} onQuantity={changeQuantity} onRemove={removeFromCart} onBack={() => { setOrderReceipt(null); shop() }} onPlaceOrder={placeOrder} receipt={orderReceipt} />}</main>
       {toast && <div className={`glass-toast toast-${toast.tone}`} key={toast.id} role="status" aria-live="polite"><span className="toast-icon">{toast.tone === 'removed' ? '−' : '✓'}</span><span>{toast.message}</span><button onClick={() => setToast(null)} aria-label="Dismiss notification">×</button></div>}
       <footer className="site-footer">
-        <div className="footer-main"><div className="footer-brand"><div className="brand-lockup"><span className="brand-mark">w<span>♥</span></span><span className="brand-name">warmgesture<span className="brand-dot">.</span></span></div><p>A little something, sent with a lot of love.</p><span className="footer-social">Instagram&nbsp; · &nbsp;Pinterest</span></div>
+        <div className="footer-main"><div className="footer-brand"><div className="brand-lockup"><span className="brand-mark">w<span><Icon name="heart" size={9}/></span></span><span className="brand-name">warmgesture<span className="brand-dot">.</span></span></div><p>A little something, sent with a lot of love.</p><span className="footer-social">Instagram&nbsp; · &nbsp;Pinterest</span></div>
           <div className="footer-col"><h3>Explore</h3><button onClick={() => shop()}>Shop all gifts</button><button onClick={() => shop('Flowers')}>Flowers</button><button onClick={() => shop('Sweet treats')}>Sweet treats</button><button onClick={() => shop('Gift boxes')}>Gift boxes</button></div>
           <div className="footer-col"><h3>Here to help</h3><a href="mailto:hello@warmgesture.com">Contact us</a><a href="mailto:hello@warmgesture.com">Delivery & returns</a><a href="mailto:hello@warmgesture.com">FAQs</a></div>
-          <div className="footer-note"><span className="footer-sparkle">✳</span><p>Make someone’s<br/>day a little brighter.</p><button onClick={() => shop()}>Find a gift <span>↗</span></button></div>
+          <div className="footer-note"><span className="footer-sparkle"><Icon name="sparkle" size={20}/></span><p>Make someone’s<br/>day a little brighter.</p><button onClick={() => shop()}>Find a gift <span><Icon name="arrowRight" size={14}/></span></button></div>
         </div><div className="footer-bottom"><span>© 2025 WarmGesture. Made for moments that matter.</span><span>Thoughtfully picked · Lovingly packed</span></div>
       </footer>
     </div>
